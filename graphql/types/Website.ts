@@ -49,7 +49,16 @@ export const Response = objectType({
     })
   },
 })
-
+type PrismaWebsite = {
+  id: string
+  createdAt: Date
+  updatedAt: Date
+  title: string
+  link: string
+  description: string
+  imageUrl: string | null
+  category: string | null
+}
 export const WebsiteQuery = extendType({
   type: 'Query',
   definition(t) {
@@ -60,7 +69,7 @@ export const WebsiteQuery = extendType({
         after: stringArg(),
       },
       async resolve(_, args, ctx) {
-        let queryResults = []
+        let queryResults: PrismaWebsite[] = []
 
         if (args.after) {
           // check if there is a cursor as the argument
