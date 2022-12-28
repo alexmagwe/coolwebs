@@ -52,11 +52,11 @@ const Home = (props: Props) => {
       <div className='flex justify-center pt-32 items-center text-4xl text-center mx-auto'>
         {error.message == 'unauthenticated' ? (
           <div className='w-full flex flex-col py-8 z-0 items-center justify-center  absolute '>
-            <h2 className='text-4xl text-blue-900 my-4'>
+            <h2 className='text-4xl text-slate-800 my-4'>
               Sign in to start exploring and saving cool websites
             </h2>
             <Link href='api/auth/login'>
-              <button className='px-12 py-3 text-white text-lg font-bold bg-blue-600 rounded-md'>
+              <button className='px-12 py-3 text-white text-lg font-bold bg-purple-600 rounded-md'>
                 login
               </button>
             </Link>
