@@ -1,16 +1,16 @@
-import { objectType,nonNull, extendType, intArg, stringArg } from "nexus";
-import { Context } from "../context";
-import { User } from "./User";
+import { objectType, nonNull, extendType, intArg, stringArg } from 'nexus'
+import { Context } from '../context'
+import { User } from './User'
 export const Website = objectType({
-  name: "Website",
+  name: 'Website',
   definition(t) {
-    t.string("id");
-    t.string("title");
-    t.string("link");
-    t.string("imageUrl");
-    t.string("description");
-    t.string("category");
-    t.list.field("users", {
+    t.string('id')
+    t.string('title')
+    t.string('link')
+    t.string('imageUrl')
+    t.string('description')
+    t.string('category')
+    t.list.field('users', {
       type: User,
       async resolve(_parent, _args, ctx: Context) {
         return await ctx.prisma.website
@@ -19,48 +19,48 @@ export const Website = objectType({
               id: _parent.id!,
             },
           })
-          .users();
+          .users()
       },
-    });
+    })
   },
-});
+})
 export const Edge = objectType({
-  name: "Edge",
+  name: 'Edge',
   definition(t) {
-    t.string("cursor");
-    t.field("node", {
+    t.string('cursor')
+    t.field('node', {
       type: Website,
-    });
+    })
   },
-});
+})
 export const PageInfo = objectType({
-  name: "PageInfo",
+  name: 'PageInfo',
   definition(t) {
-    t.string("endCursor");
-    t.boolean("hasNextPage");
+    t.string('endCursor')
+    t.boolean('hasNextPage')
   },
-});
+})
 export const Response = objectType({
-  name: "Response",
+  name: 'Response',
   definition(t) {
-    t.field("pageInfo", { type: PageInfo });
-    t.list.field("edges", {
+    t.field('pageInfo', { type: PageInfo })
+    t.list.field('edges', {
       type: Edge,
-    });
+    })
   },
-});
+})
 
 export const WebsiteQuery = extendType({
-  type: "Query",
+  type: 'Query',
   definition(t) {
-    t.field("websites", {
-      type: "Response",
+    t.field('websites', {
+      type: 'Response',
       args: {
         first: intArg(),
         after: stringArg(),
       },
       async resolve(_, args, ctx) {
-        let queryResults = null;
+        let queryResults = []
 
         if (args.after) {
           // check if there is a cursor as the argument
@@ -70,20 +70,20 @@ export const WebsiteQuery = extendType({
             cursor: {
               id: args.after, // the cursor
             },
-          });
+          })
         } else {
           // if no cursor, this means that this is the first request
           //  and we will return the first items in the database
           queryResults = await ctx.prisma.website.findMany({
             take: args.first!,
-          });
+          })
         }
         // if the initial request returns links
         if (queryResults.length > 0) {
           // get last element in previous result set
-          const lastLinkInResults = queryResults[queryResults.length - 1];
+          const lastLinkInResults = queryResults[queryResults.length - 1]
           // cursor we'll return in subsequent requests
-          const myCursor = lastLinkInResults.id;
+          const myCursor = lastLinkInResults.id
 
           // query after the cursor to check if we have nextPage
           const secondQueryResults = await ctx.prisma.website.findMany({
@@ -94,7 +94,7 @@ export const WebsiteQuery = extendType({
             // orderBy: {
             //   users: { _count: "asc" },
             // },
-          });
+          })
           // return response
           const result = {
             pageInfo: {
@@ -105,9 +105,9 @@ export const WebsiteQuery = extendType({
               cursor: website.id,
               node: website,
             })),
-          };
+          }
 
-          return result;
+          return result
         }
         //
         return {
@@ -116,38 +116,47 @@ export const WebsiteQuery = extendType({
             hasNextPage: false,
           },
           edges: [],
-        };
+        }
       },
-    });
+    })
   },
-});
-export const WebsiteMutation=extendType({
-    type:"Mutation",
-    definition(t){
-        t.nonNull.field('createWebsite',{
-            type:Website,
-            args:{
-                title:nonNull(stringArg()),
-                description:nonNull(stringArg()),
-                link:nonNull(stringArg()),
-                imageUrl:nonNull(stringArg()),
-                category:stringArg(),
-            },
-            async resolve(_parent,args:{title:string,description:string,link:string,imageUrl:string,category?:string|null|undefined},ctx:Context){
-                if(!ctx.user)
-                throw new Error('you need to be logged in to perform this action')
-                const newWeb={
-                    title:args.title,
-                    description:args.description,
-                    link:args.link,
-                    imageUrl:args.imageUrl,
-                    category:args.category
-                }
-                return await ctx.prisma.website.create({
-                    data:newWeb
-                })
-            }
+})
+export const WebsiteMutation = extendType({
+  type: 'Mutation',
+  definition(t) {
+    t.nonNull.field('createWebsite', {
+      type: Website,
+      args: {
+        title: nonNull(stringArg()),
+        description: nonNull(stringArg()),
+        link: nonNull(stringArg()),
+        imageUrl: nonNull(stringArg()),
+        category: stringArg(),
+      },
+      async resolve(
+        _parent,
+        args: {
+          title: string
+          description: string
+          link: string
+          imageUrl: string
+          category?: string | null | undefined
+        },
+        ctx: Context
+      ) {
+        if (!ctx.user)
+          throw new Error('you need to be logged in to perform this action')
+        const newWeb = {
+          title: args.title,
+          description: args.description,
+          link: args.link,
+          imageUrl: args.imageUrl,
+          category: args.category,
+        }
+        return await ctx.prisma.website.create({
+          data: newWeb,
         })
-
-    }
+      },
+    })
+  },
 })
