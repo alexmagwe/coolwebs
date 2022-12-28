@@ -22,7 +22,6 @@ export const getServerSidePropsWrapper = async ({
   res: NextApiResponse
 }) => {
   const session = getSession(req, res)
-  console.log('session', session)
   if (!session) {
     return {
       redirect: {

@@ -1,5 +1,4 @@
-import React, { useContext, useEffect } from 'react'
-import { LinkType } from '../data'
+import React from 'react'
 import CoolWeb from './CoolWeb'
 import { gql, useQuery } from '@apollo/client'
 import { Toaster } from 'react-hot-toast'
@@ -39,12 +38,12 @@ const Home = (props: Props) => {
   // const { bookmarks } = useContext(BookmarkContext);
   if (loading) {
     return (
-      <p className='text-center'>
+      <div className='text-center h-screen flex items-center justify-center'>
         <svg
           className='animate-spin h-5 w-5 mr-3 ...'
           viewBox='0 0 24 24'
         ></svg>
-      </p>
+      </div>
     )
   }
   // console.log(data);
