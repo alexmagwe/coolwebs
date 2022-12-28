@@ -3,7 +3,16 @@ import CoolWeb from './CoolWeb'
 import { gql, useQuery } from '@apollo/client'
 import { Toaster } from 'react-hot-toast'
 import Link from 'next/link'
-type Props = {}
+export type UserQuery = {
+  email: string
+  id: string
+  bookmarks: {
+    id: string
+  }[]
+}
+type Props = {
+  user?: UserQuery
+}
 
 const allWebsitesQuery = gql`
   query ($first: Int, $after: String) {
@@ -66,8 +75,8 @@ const Home = (props: Props) => {
         )}
       </div>
     )
-  if (data && data.user) {
-    data.user.bookmarks.map((b: { id: string }) => bookmarkIds.push(b.id))
+  if (props.user) {
+    props.user.bookmarks.map((b: { id: string }) => bookmarkIds.push(b.id))
   }
 
   const { endCursor, hasNextPage } = data.websites.pageInfo
