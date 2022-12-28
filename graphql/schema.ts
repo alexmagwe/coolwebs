@@ -21,24 +21,25 @@
 // type Mutation{
 //     addWebsite(website:Website):Website
 // }
-import {makeSchema } from 'nexus'
-import {join} from 'path'
+import { makeSchema } from 'nexus'
+import { join } from 'path'
 import * as types from './types'
-export const schema=makeSchema({
-    types:[types],
-    outputs:{
-        typegen:join(
-            process.cwd(),
-            'node_modules',
-            '@types',
-            'nexus_typegen',
-            'index.d.ts'
-        ),
-        schema:join(process.cwd(),'graphql','schema.graphql'),
 
-    },
-    contextType:{
-        export:'Context',
-        module:join(process.cwd(),'graphql','context.ts')
-    }
+export const schema = makeSchema({
+  types: [types],
+  shouldGenerateArtifacts: process.env.NODE_ENV !== 'production',
+  outputs: {
+    typegen: join(
+      process.cwd(),
+      'node_modules',
+      '@types',
+      'nexus_typegen',
+      'index.d.ts'
+    ),
+    schema: join(process.cwd(), 'graphql', 'schema.graphql'),
+  },
+  contextType: {
+    export: 'Context',
+    module: join(process.cwd(), 'graphql', 'context.ts'),
+  },
 })
