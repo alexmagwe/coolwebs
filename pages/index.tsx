@@ -8,7 +8,6 @@ type Props = {
     user?: UserQuery
 }
 const Home: NextPage = (props: Props) => {
-    console.log(props)
     return (
         <div className={styles.container}>
             <Head>
@@ -56,11 +55,14 @@ export const getServerSidePropsWrapper = async ({
                 }
             `
             try {
-                const data = await request("/api/graphql", query)
-                if (data) {
+                const data: { user?: UserQuery } = await request(
+                    "/api/graphql",
+                    query
+                )
+                if (data && data.user) {
                     return {
                         props: {
-                            user: data.user ?? null,
+                            user: data.user,
                         },
                     }
                 }
