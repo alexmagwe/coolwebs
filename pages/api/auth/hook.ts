@@ -1,6 +1,6 @@
 import prisma from '../../../lib/prisma'
 import type { NextApiRequest, NextApiResponse } from 'next';
-
+//triggered when a user signs up by a webhook 
 export default async function handler(req: NextApiRequest,res: NextApiResponse){
     const {email,secret}:{email:string,secret:string}=req.body
     if(req.method!=='POST'){
