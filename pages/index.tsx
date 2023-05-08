@@ -8,6 +8,7 @@ type Props = {
     user?: UserQuery
 }
 const Home: NextPage = (props: Props) => {
+    console.log(props)
     return (
         <div className={styles.container}>
             <Head>
@@ -41,6 +42,7 @@ export const getServerSidePropsWrapper = async ({
     const session = getSession(req, res)
     if (session) {
         const { user } = session
+
         if (user.email) {
             const query = gql`
                 query User {
@@ -55,7 +57,7 @@ export const getServerSidePropsWrapper = async ({
             `
             try {
                 const data = await request("/api/graphql", query)
-                if (data && data.user) {
+                if (data && data.user !== undefined) {
                     return {
                         props: {
                             user: data.user,
