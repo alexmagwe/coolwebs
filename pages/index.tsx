@@ -57,10 +57,10 @@ export const getServerSidePropsWrapper = async ({
             `
             try {
                 const data = await request("/api/graphql", query)
-                if (data && data.user !== undefined) {
+                if (data) {
                     return {
                         props: {
-                            user: data.user,
+                            user: data.user ?? null,
                         },
                     }
                 }
